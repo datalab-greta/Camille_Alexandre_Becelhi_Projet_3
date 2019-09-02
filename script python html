@@ -1,0 +1,59 @@
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep  2 09:47:16 2019
+
+@author: ca
+"""
+# Import de la librairie Beautifulsoup
+import requests
+import lxml
+from bs4 import BeautifulSoup
+
+# Extraction des données avec request
+requete = requests.get("https://candidat.pole-emploi.fr/offres/recherche?lieux=24R&motsCles=python&offresPartenaires=true&range=0-500&rayon=500&tri=0")
+page = requete.content
+soup = BeautifulSoup(page)
+
+# Extraction du titre h1 dans la page html
+title = soup.title
+print(title)
+
+# Extraction des titres h2 dans la page html
+for sub_heading in soup.find_all('h2'):
+    print (sub_heading.text)
+
+# Extraction des titres h3 dans la page html
+for sub_heading in soup.find_all('h3'):
+    print (sub_heading.text)  
+    
+# Extraction du titre avec le nombre d'offres d'emploi
+for sub_heading in soup.find_all("h1", {"class": "title"}):
+    print(sub_heading.text)
+
+for sub_heading in soup.find_all("p", {"class": "date"}):
+    print(sub_heading.text)
+
+for sub_heading in soup.find_all("p", {"class": "contrat"}):
+    print(sub_heading.text)
+    
+for sub_heading in soup.find_all("p", {"class": "localisation"}):
+    print(sub_heading.text)
+
+import pandas as pd
+
+# Création d'une liste des offres d'emploi pour data en région Centre Val de Loire
+Offres = [tag.get_text("h2", {"class": "t4 media-heading"}) for tag in soup.find_all("h2", {"class": "t4 media-heading"})]
+
+Date = [tag.get_text("p", {"class": "date"}) for tag in soup.find_all("p", {"class": "date"})]
+
+Type_Contrat = [tag.get_text("p", {"class": "contrat visible-xs"}) for tag in soup.find_all("p", {"class": "contrat visible-xs"})]
+
+Localisation = [tag.get_text("p", {"class": "subtext"}) for tag in soup.find_all("p", {"class": "subtext"})]
+
+result = pd.concat([pd.DataFrame(Offres), pd.DataFrame(Date), pd.DataFrame(Type_Contrat),pd.DataFrame(Localisation)],axis=1)
+result.columns = ['Offres', 'Date','Type_Contrat','Localisation']
+result.to_csv("Offres_Data_Region_Centre_Septembre_2019", index = False, header = True)
+
+
