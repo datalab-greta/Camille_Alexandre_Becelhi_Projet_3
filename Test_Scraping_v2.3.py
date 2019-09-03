@@ -38,7 +38,7 @@ for result in soup.find_all(class_ ='result'):
 #Création Data frame et csv
 data={'Nom des offres': Titles,
       'Date de parution': Date_publication,
-      'Type de de contrat': Type_Contrat,
+      'Type de contrat': Type_Contrat,
       'Localisation': Localisation,
       'Référence': Reference,
       'Liens':Lien}
