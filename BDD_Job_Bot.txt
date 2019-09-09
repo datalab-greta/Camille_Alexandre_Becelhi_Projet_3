@@ -1,0 +1,44 @@
+#DROP DATABASE IF EXISTS `Job_Bot_AlCaBe`;
+#CREATE DATABASE IF NOT EXISTS `Job_Bot_AlCaBe` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+#USE DATABASE Job_Bot_AlCaBe;
+
+#DROP TABLE IF EXISTS Offres_région_Centre;
+
+CREATE TABLE IF NOT EXISTS Offres_région_Centre (
+`ID` INTEGER NOT NULL AUTO_INCREMENT,
+`Nom des offres` varchar(100),
+`Date de parution` varchar(70),
+`Type de contrat` varchar(46),
+`Localisation` varchar(60),
+`Références` varchar(30),
+`Liens` varchar(70),
+PRIMARY KEY (`ID`)
+)
+DEFAULT CHARACTER SET = UTF8;
+#DROP TABLE IF EXISTS Offres_Pays_de_la_Loire;
+
+CREATE TABLE IF NOT EXISTS Offres_Pays_de_la_Loire (
+`ID` INTEGER NOT NULL AUTO_INCREMENT,
+`Nom des offres` varchar(100),
+`Date de parution` varchar(70),
+`Type de contrat` varchar(46),
+`Localisation` varchar(60),
+`Références` varchar(30),
+`Liens` varchar(70),
+PRIMARY KEY (`ID`)
+)
+DEFAULT CHARACTER SET = UTF8;
+
+#DROP TABLE IF EXISTS Offres_Auvergne_Rhône_Alpes;
+
+CREATE TABLE IF NOT EXISTS Offres_Auvergne_Rhône_Alpes (
+`ID` INTEGER NOT NULL AUTO_INCREMENT,
+`Nom des offres` varchar(100),
+`Date de parution` varchar(70),
+`Type de contrat` varchar(46),
+`Localisation` varchar(60),
+`Références` varchar(30),
+`Liens` varchar(70),
+PRIMARY KEY (`ID`)
+)
+DEFAULT CHARACTER SET = UTF8;
