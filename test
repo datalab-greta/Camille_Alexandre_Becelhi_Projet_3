@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep 10 14:54:03 2019
+
+@author: ca
+"""
+
+import requests, json, sys, re, os, configparser
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import pandas as pd
+from sqlalchemy import create_engine, text
+import requests,re
+
+BASE = 'https://candidat.pole-emploi.fr/'
+
+region="84R"
+keyword="data"
+
+# Récupération du nombre d'offres
+URL = BASE+'/offres/recherche?lieux='+region+'&motsCles='+keyword+'&offresPartenaires=true&range=0-9&rayon=10&tri=0'
+#print("URL: "+URL)
+req = requests.get(URL)
+soup = BeautifulSoup(req.text, "lxml")
+#str = soup.select('h1.title')[0].text.replace('\n', '').replace(' offres', '')
+#str = soup.select('h1.title')[0].text[:4]
+str = re.findall(r'\d+', soup.select('h1.title')[0].text)[0] # REGEX pour le 1er chiffre !
+N=int(str)
+print("%d [%s]" % (N, URL))
+
+
+def traite(region, index, keyword):
+    '''
+    region: 24R
+    index: 0 ou 100 ou 200...
+    '''
+    no = "%d-%d" % (index*100, index*100+20)
+    
+    URL = BASE+'/offres/recherche?lieux='+region+'&motsCles='+keyword+'&offresPartenaires=true&range='+no+'&rayon=10&tri=0'
+    #req = requests.get()
+    print("URL: "+URL)
+    req = requests.get(URL)
+    soup = BeautifulSoup(req.text, "lxml")
+    list = soup.select('li.result')
+    if len(list)==0:
+        return
+    print("Nombre de blocks: %d [%s]" % (len(list), soup.select('h1.title')[0].text))
+    for x in list:
+        a = x.select('a.btn-reset')[0]
+        title = a['title']
+        href = a['href']
+        id = href[25:]
+        print(x.select('a.btn-reset')[0]['title'])
+        print("%-80s %s" %(title, id))
+        
+for i in range(3):
+    print(i)
+    traite("24R", i, "donn%C3%A9es") # donn%C3%A9es
+
+i=0
+while(i<N):
+    imax = i+99 if (i+99<N) else N
+    if imax>N:
+       imax=N
+    rg="%d-%d" % (i, imax)
+    print(rg)
+
+    URL = BASE+'/offres/recherche?lieux='+region+'&motsCles='+keyword+'&offresPartenaires=true&range='+rg+'&rayon=10&tri=0'
+    #req = requests.get()
+    print("URL: "+URL)
+    req = requests.get(URL)
+    soup = BeautifulSoup(req.text, "lxml")
+    list = soup.select('li.result')
+    if len(list)==0:
+        return
+        continue
+    print("Nombre de blocks: %d [%s]" % (len(list), soup.select('h1.title')[0].text))
+    for x in list:
+        a = x.select('a.btn-reset')[0]
+        title = a['title'][:80] # ATTENTION: VARCHAR(80) !
+        href = a['href']
+        id = href[25:]
+        print(x.select('a.btn-reset')[0]['title'])
+        print("%-80s %s" %(title, id))
+        date = x.select('p.date')[0].text
+        param = {'ref': id, 'title':title, 'date':date}
+        print(param)
+        #engine.execute(statement, param)
+
+
+    i+=100
+        
