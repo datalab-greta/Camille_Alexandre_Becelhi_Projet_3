@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#import requests, json, sys, re, os, configparser
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import pandas as pd
@@ -82,10 +81,6 @@ for links in Liendf['Liens']:
         Date.append(a.text)
     for exp in soup2.find_all(itemprop="experienceRequirements"):
         Exp.append(exp.text)
-#    skills=soup2.find_all(itemprop="skills")
-#    for s in skills:
-#        print(skills)
-#Competence=pd.DataFrame(Competence)            
 
 #Création Data frame pour csv
 data={'Nom des offres': Titles,
@@ -125,4 +120,4 @@ select = mySQLengine.execute('SELECT * FROM Offres_région_Centre')
 ResultSet = select.fetchall()
 ResultSet = pd.DataFrame(ResultSet)
 print("Voilà la base :", ResultSet)
-ResultSet.to_csv('~/Documents/Projet_3_webscraping/CSV/Base_content.csv',index=False, header=True)
+ResultSet.to_csv('~/Archive/CSV/Base_content.csv',index=False, header=False)
